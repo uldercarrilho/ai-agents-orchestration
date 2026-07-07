@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
   - name: Workflow spec
-    url: https://github.com/YOUR_USER/ai-agents-orchestration/blob/master/docs/superpowers/specs/2026-07-06-github-workflow-backlog-design.md
+    url: https://github.com/uldercarrilho/ai-agents-orchestration/blob/master/docs/superpowers/specs/2026-07-06-github-workflow-backlog-design.md
     about: Read the GitHub workflow design spec before creating issues
