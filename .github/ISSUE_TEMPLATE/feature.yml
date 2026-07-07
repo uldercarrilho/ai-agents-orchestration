@@ -1,0 +1,40 @@
+name: Feature
+description: New feature idea stub for the backlog
+title: "[Feature] "
+labels:
+  - type:feature
+  - needs:triage
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Problem
+        <!-- 1-2 sentences: what problem does this solve? -->
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: What does "done" look like, roughly?
+    validations:
+      required: true
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: Optional — cost, stack, deadline
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        ## Links
+        - Spec: _(added during Planning)_
+        - Plan: _(added during Planning)_
+        - PR: _(added when opened)_
