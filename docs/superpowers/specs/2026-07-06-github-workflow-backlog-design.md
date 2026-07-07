@@ -1,6 +1,6 @@
 # GitHub Workflow & Backlog — Design Spec
 
-**Status:** Draft — awaiting user review  
+**Status:** Approved  
 **Date:** 2026-07-06  
 **Related:** [2026-07-06-ai-agent-orchestration-design.md](./2026-07-06-ai-agent-orchestration-design.md)
 
@@ -27,6 +27,7 @@ Design for a solo-developer workflow that uses **GitHub Projects** as the contro
 | Plan format | **Superpowers native** | Conductor parses `### Task N:` blocks; no custom table |
 | Parent Done | **Human only** | You move parent to Done after Gate 2 (PR review) |
 | Roadmap views | **Board + Roadmap** | One project, two views; milestones group releases |
+| Board visibility | **All issues** | Parents and child sub-issues appear on the Board |
 
 ---
 
@@ -46,10 +47,14 @@ Design for a solo-developer workflow that uses **GitHub Projects** as the contro
 
 | View | Purpose | What you see |
 |------|---------|--------------|
-| **Board** | Day-to-day execution | Parent issues as cards in status columns |
-| **Roadmap** | Release planning | Parent issues on a timeline, grouped by **Milestone** |
+| **Board** | Day-to-day execution | **All issues** — parent features and child tasks as cards in status columns |
+| **Roadmap** | Release planning | **Parent issues only** on a timeline, grouped by **Milestone** |
 
 Both views share a single **Status** project field.
+
+**Board visibility:** Every issue added to the project appears on the Board — including sub-issues created during execution bootstrap. Use the `type:feature` / `type:task` labels (or GitHub's parent/sub-issue grouping) to distinguish features from tasks at a glance. Optional filtered view: **Features only** (`type:feature`) when you want a less cluttered board during planning.
+
+**Automation requirement:** When Conductor creates sub-issues, it must also **add each sub-issue to the GitHub Project** so they appear on the Board immediately.
 
 ### Issue types
 
@@ -58,7 +63,7 @@ Both views share a single **Status** project field.
 | **Feature (parent)** | Top-level issue | Idea stub through full feature lifecycle |
 | **Task (child)** | Sub-issue of parent | One Superpowers plan task; AI owns status |
 
-Only **parent issues** appear on the Board and Roadmap. Child tasks are visible on the parent's sub-issue list.
+**Parent issues** appear on both Board and Roadmap. **Child sub-issues** appear on the Board only (not Roadmap — tasks are execution detail, not release-planning units).
 
 ### Status field (6 values)
 
@@ -277,7 +282,7 @@ When parent Status → **Ready**:
 1. GitHub Action detects status change on a `type:feature` issue.
 2. Invokes `conductor bootstrap --issue <parent#>`.
 3. Conductor moves parent → **In progress**.
-4. Parses plan file; creates sub-issues (Ready + blocked by).
+4. Parses plan file; creates sub-issues (Ready + blocked by) and **adds each to the GitHub Project**.
 5. Runs task picker loop until all children Done.
 6. Opens PR; moves parent → **In review**.
 
@@ -329,7 +334,7 @@ Minimum setup before automation:
 
 1. Initialize git repo and push to GitHub.
 2. Create GitHub Project with Status: Backlog, Planning, Ready, In progress, In review, Done.
-3. Add Board and Roadmap views.
+3. Add Board (all issues) and Roadmap (parent issues only) views.
 4. Create milestones (`v0.1 — Workflow bootstrap`, etc.).
 5. Add issue templates (`feature.md`, `task.md`).
 6. Add labels: `type:feature`, `type:task`, `needs:triage`, `risk:high`.
@@ -377,7 +382,7 @@ Minimum setup before automation:
 |---------|--------|
 | GitHub automation feels painful | Revisit Linear adapter (see main orchestration spec) |
 | Plan dep parsing unreliable | Add `**Depends on:**` to writing-plans skill template |
-| Board Ready column cluttered | Add filtered "Runnable" view (Ready + unblocked) |
+| Board cluttered with many tasks | Add filtered views: "Features only" or "Runnable" (Ready + unblocked) |
 | Backlog grows large | Optional `docs/backlog/` stubs synced to issues |
 
 ---
@@ -392,5 +397,5 @@ Minimum setup before automation:
 | Present design sections | Done — all sections approved |
 | Write design doc | Done — this file |
 | Spec self-review | Done |
-| User review | Pending |
-| Invoke writing-plans skill | Pending (after approval) |
+| User review | Done — approved |
+| Invoke writing-plans skill | Done |
